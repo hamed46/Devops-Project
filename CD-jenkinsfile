@@ -1,0 +1,34 @@
+pipeline {
+
+     /* agent { label 'maven' } */
+     agent any
+
+
+    stages {
+      
+        stage("run image on server") {
+            steps {
+                sh " docker stop achatproject/achatproject || true"
+                sh " docker stop mysqldb || true"
+                sh " docker rm achatproject/achatproject || true"
+                sh " docker rm mysqldb || true"
+               // sh "docker run --name mysqldb –-network mynetwork -e MYSQL_ROOT_PASSWORD=root –v /home/mysql/data:/var/lib/mysql -d mysql:8"
+               // sh "docker run –p 9090:9090 –-network mynetwork –d achatproject/achatproject"
+            }
+        }
+        stage("run image on server using docker-compose") {
+            steps {
+              // sh "docker-compose down" 
+               sh "docker-compose up -d"
+            }
+        }
+    
+    }
+  
+    post {
+        always {
+            cleanWs()
+        }
+    }
+    
+}
